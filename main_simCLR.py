@@ -33,8 +33,6 @@ args_form.add_argument("--num_labeled", type=int, default=1800)  # 3000, 1500, 9
 args_form.add_argument("--tau", type=float, default=0.1)  # 0.05, 0.1, 0.5, 1.0
 args_form.add_argument("--mu", type=float, default=1)
 
-args_form.add_argument("--visualize_data", default=False, action="store_true")
-
 
 def main(seed):
     print(datetime.now())
@@ -58,18 +56,6 @@ def main(seed):
     test_loader = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
     val_train_iter = iter(val_train_loader)
 
-    # img = []
-    # for i, ((raw, _),(aug1, _),(aug2, _)) in enumerate(train_loader):
-    #     img.append(raw[0])
-    #     img.append(aug1[0])
-    #     img.append(aug2[0])
-    #     img.append(raw[1])
-    #     img.append(aug1[1])
-    #     img.append(aug2[1])
-    #     if i == 10: break
-    # img = torch.stack(img)
-    # img = torchvision.utils.make_grid(img)
-    # imshow(img)
 
     # Models and initial state
     if args.dataset == 'mnist':
@@ -89,7 +75,7 @@ def main(seed):
 
     for e in range(args.max_epoch):
 
-        torch.save({"args": args}, name)
+        torch.save({"args.logs": args.logs}, name)
         sys.stdout.flush()
 
         # Encoder training
@@ -154,7 +140,7 @@ def main(seed):
     assess_linlayer(args, enc, mlp, val_test_loader, data="val_test")
     assess_linlayer(args, enc, mlp, test_loader, data="test")
     console_log(args, main_train=False)
-    torch.save({"args": args}, name)
+    torch.save({"args.logs": args.logs}, name)
 
 
 def train(args, enc, mlp, val_train_loader, val_test_loader, test_loader, purpose):
@@ -227,7 +213,7 @@ def assess_linlayer(args, enc, mlp, data_loader, data):
 
 
 if __name__ == '__main__':
-    for _, seed in enumerate([0,1,2,3,4]):
+    for _, seed in enumerate([0, 1, 2, 3, 4]):
         main(seed)
 
 
